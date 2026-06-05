@@ -14,7 +14,7 @@ export async function GET() {
     const notes = await query('SELECT * FROM notes ORDER BY created_at DESC');
     return NextResponse.json(notes);
   } catch (error){
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }
 
