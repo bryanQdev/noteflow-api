@@ -1,7 +1,8 @@
-import { neon} from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
+
 const sql = neon(process.env.DATABASE_URL!);
 
 export async function query<T = unknown>(text: string, params?: unknown[]): Promise<T[]> {
-    const result = await sql`${text}`; // @ts-ignore - neon expects template strings
-    return result as T[];
+  const result = await (sql as any)(text, params ?? []);
+  return result as T[];
 }
