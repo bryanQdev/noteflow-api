@@ -13,8 +13,8 @@ export async function GET() {
   try {
     const notes = await query('SELECT * FROM notes ORDER BY created_at DESC');
     return NextResponse.json(notes);
-  } catch {
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
+  } catch (error){
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
 
