@@ -8,12 +8,13 @@ const itemSchema = z.object({
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const items = await query(
       'SELECT * FROM checklist_items WHERE note_id = $1',
-      [params.id]
+      [id]
     );
     return NextResponse.json(items);
   } catch {
@@ -23,9 +24,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const result = itemSchema.safeParse(body);
     if (!result.success) {
@@ -33,7 +35,7 @@ export async function POST(
     }
     const [item] = await query(
       'INSERT INTO checklist_items (note_id, text) VALUES ($1, $2) RETURNING *',
-      [params.id, result.data.text]
+      [id, result.data.text]
     );
     return NextResponse.json(item, { status: 201 });
   } catch {
